@@ -16,4 +16,6 @@ jobs:
     - name: update-rust-toolchain
       uses: ./.
       with:
-        minor-version-delta: 1
+        minor-version-delta: 0
+        update-minor: false
+        update-patch: true

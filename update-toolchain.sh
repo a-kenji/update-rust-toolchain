@@ -13,15 +13,8 @@ echo "$RUST_TOOLCHAIN_VERSION"
 
 # update with new version number
 function _update_channel(){
-printf \
-"
-# This file is updated by \`update-toolchain.sh\`
-# We aim to be around 1-2 rust releases behind in order
-# to get people the time to update their toolchains properly.
-# By enforcing this, we can also make full use of the features
-# provided by the current channel.
-"
-sed -e "/channel/s/\".*\"/\"$1\"/" "${RUST_TOOLCHAIN_FILE}"
+local RUST_TOOLCHAIN_VERSION="$1"
+sed -e "/channel/s/\".*\"/\"${RUST_TOOLCHAIN_VERSION}\"/" "${RUST_TOOLCHAIN_FILE}"
 }
 
 function _get_last_no_releases() {
@@ -62,9 +55,7 @@ for i in $RELEASES;do
     fi
     LATEST="${SEMVER[1]}"
     if [ -1 == "${MINOR_DELTA}" ];then
-        echo "$(_update_channel "$i")">${RUST_TOOLCHAIN_FILE}
-        echo updated to "$i"
-        exit
+        echo "$i"
     fi
 done
 }
@@ -72,18 +63,13 @@ done
 function _find_patch_version() {
 local MINOR_VERSION="$1"
 local RELEASES="$2"
-echo $MINOR_VERSION
-echo $RELEASES
 for i in $RELEASES;do
     SEMVER=($(_parse_semver "$i"))
     if [ "$MINOR_VERSION" == "${SEMVER[1]}" ];then
         echo "$i"
-        exit
     fi
 done
 }
-
-
 
 _main() {
 # Path to the rust-toolchain file
@@ -107,16 +93,19 @@ echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION[@]}"
 
 
 RELEASES="$(_get_last_no_releases)"
-#_find_version
 
-_find_patch_version "${RUST_TOOLCHAIN_VERSION[1]}" "$RELEASES"
-_find_minor_version "${MINOR_DELTA}" "$RELEASES"
+if [[ $UPDATE_PATCH == "true" ]]; then
+    VERSION=$(_find_patch_version "${RUST_TOOLCHAIN_VERSION[1]}" "$RELEASES")
+fi
 
-true
+if [[ $UPDATE_MINOR == "true" ]]; then
+    VERSION=$(_find_minor_version "${MINOR_DELTA}" "$RELEASES")
+fi
+
+echo "$(_update_channel $VERSION)" > "${RUST_TOOLCHAIN_FILE}"
+cat "${RUST_TOOLCHAIN_FILE}"
+
 }
-
-
-
 
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
