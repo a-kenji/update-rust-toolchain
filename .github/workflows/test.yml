@@ -17,5 +17,5 @@ jobs:
       uses: ./.
       with:
         minor-version-delta: 0
-        update-minor: false
+        update-minor: true
         update-patch: true
