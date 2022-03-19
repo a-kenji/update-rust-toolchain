@@ -1,0 +1,17 @@
+iname: "update-rust-toolchain test"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  simple-build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: update-rust-toolchain
+      uses: ./.
