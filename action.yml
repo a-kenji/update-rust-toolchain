@@ -6,8 +6,12 @@ inputs:
     description: 'The delta for the minor version.'
     required: false
     default: 0
-  patch-version:
+  update-patch:
     description: 'Update patch versions.'
+    required: false
+    default: true
+  update-minor:
+    description: 'Update minor versions.'
     required: false
     default: true
   toolchain-path:
@@ -22,14 +26,20 @@ inputs:
 runs:
   using: "composite"
   steps:
-    #- id: install-nix
-      #name: install nix
-      #uses: cachix/install-nix-action@v16
-    #- run: nix profile install nixpkgs#jq
-    #- run: nix profile install nixpkgs#curl
-    - run: ./update-toolchain.sh ${{ inputs.toolchain-path }} ${{ inputs.minor-version-delta }} ${{ inputs.blurb}}
+    - run: ./update-toolchain.sh
       shell: bash
-      #- name: Create Pull Request
+      env:
+        TOOLCHAIN_FILE: ${{ inputs.toolchain-path }}
+        INPUTS_UPDATE_PATCH: ${{ inputs.update-patch }}
+        INPUTS_UPDATE_MINOR: ${{ inputs.update-minor }}
+        MINOR_VERSION_DELTA: ${{ inputs.minor-version-delta }}
+        BLURB: ${{ inputs.blurb}}
+   #- name: Create Pull Request
     #id: cpr
     #uses: peter-evans/create-pull-request@v3
     #with:
+    #
+
+  branding:
+    icon: file-text
+    color: pink

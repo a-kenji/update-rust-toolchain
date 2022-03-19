@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -euo pipefail
 # dependencies: bash, curl, jq
 #
 # Updates a rust-toolchain file in relation to the official rust releases.
 
-# Path to the rust-toolchain file
-RUST_TOOLCHAIN_FILE="$1"
-# How many minor versions delta there should be,
-# will automatically advance patch versions.
-MINOR_DELTA="$2"
-RUST_TOOLCHAIN_VERSION=$(grep -oP 'channel = "\K[^"]+' "./rust-toolchain")
-#RUST_TOOLCHAIN_FILE=../../rust-toolchain
-#RUST_TOOLCHAIN_FILE=./rust-toolchain
+
+function _current_toolchain_version() {
+local RUST_TOOLCHAIN_FILE="$1"
+RUST_TOOLCHAIN_VERSION=$(grep -oP 'channel = "\K[^"]+' "${RUST_TOOLCHAIN_FILE}")
+echo "$RUST_TOOLCHAIN_VERSION"
+}
 
 # update with new version number
-update_channel(){
+function _update_channel(){
 printf \
 "
 # This file is updated by \`update-toolchain.sh\`
@@ -26,12 +24,12 @@ printf \
 sed -e "/channel/s/\".*\"/\"$1\"/" "${RUST_TOOLCHAIN_FILE}"
 }
 
-get_last_no_releases() {
+function _get_last_no_releases() {
     curl --silent "https://api.github.com/repos/rust-lang/rust/releases" | \
-        jq '.[range(20)].tag_name' | sed -e 's/\"//g'
+        jq '.[range(50)].tag_name' | sed -e 's/\"//g'
 }
 
-function parse_semver() {
+function _parse_semver() {
     local token="$1"
     local major=0
     local minor=0
@@ -47,23 +45,80 @@ function parse_semver() {
 
     echo "$major $minor $patch"
 }
-function get_string_arrary() {
+function _get_string_arrary() {
     IFS=' ' read  -r -a array <<< "$1";
     echo "${array["${2}"]}"
 }
 
-RUST_TOOLCHAIN_VERSION="$(parse_semver $(echo $RUST_TOOLCHAIN_VERSION))"
-TARGET_TOOLCHAIN_MINOR_VERSION=$(($(get_string_arrary "${RUST_TOOLCHAIN_VERSION}" 1) - MINOR_DELTA))
 
-LATEST=0
-for i in $(get_last_no_releases);do
-    SEMVER=($(parse_semver "$i"))
+function _find_minor_version() {
+local MINOR_DELTA="$1"
+local RELEASES="$2"
+local LATEST=0
+for i in $RELEASES;do
+    SEMVER=($(_parse_semver "$i"))
     if [ "$LATEST" != "${SEMVER[1]}" ];then
         MINOR_DELTA=$((MINOR_DELTA - 1))
     fi
     LATEST="${SEMVER[1]}"
     if [ -1 == "${MINOR_DELTA}" ];then
-        echo "$(update_channel "$i")"> ${RUST_TOOLCHAIN_FILE}
+        echo "$(_update_channel "$i")">${RUST_TOOLCHAIN_FILE}
+        echo updated to "$i"
         exit
     fi
 done
+}
+
+function _find_patch_version() {
+local MINOR_VERSION="$1"
+local RELEASES="$2"
+echo $MINOR_VERSION
+echo $RELEASES
+for i in $RELEASES;do
+    SEMVER=($(_parse_semver "$i"))
+    if [ "$MINOR_VERSION" == "${SEMVER[1]}" ];then
+        echo "$i"
+        exit
+    fi
+done
+}
+
+
+
+_main() {
+# Path to the rust-toolchain file
+RUST_TOOLCHAIN_FILE="$TOOLCHAIN_FILE"
+echo RUST_TOOLCHAIN_FILE "$TOOLCHAIN_FILE"
+#RUST_TOOLCHAIN_FILE=$(echo "$TOOLCHAIN_FILE" | awk -F/ '{print $3}')
+# How many minor versions delta there should be,
+# will automatically advance patch versions.
+MINOR_DELTA="$MINOR_VERSION_DELTA"
+echo MINOR_DELTA "$MINOR_DELTA"
+UPDATE_PATCH="$INPUTS_UPDATE_PATCH"
+echo UPDATE_PATCH "$UPDATE_PATCH"
+UPDATE_MINOR="$INPUTS_UPDATE_MINOR"
+echo UPDATE_MINOR "$UPDATE_MINOR"
+#MINOR_DELTA=$(echo "$MINOR_VERSION_DELTA" | awk -F/ '{print $3}')
+
+RUST_TOOLCHAIN_VERSION="$(_current_toolchain_version "$RUST_TOOLCHAIN_FILE")"
+echo CURRENT_RUST_TOOLCHAIN_VERSION "$RUST_TOOLCHAIN_VERSION"
+RUST_TOOLCHAIN_VERSION=($(_parse_semver $(echo "$RUST_TOOLCHAIN_VERSION")))
+echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION[@]}"
+
+
+RELEASES="$(_get_last_no_releases)"
+#_find_version
+
+_find_minor_version "${MINOR_DELTA}" "$RELEASES"
+_find_patch_version "${RUST_TOOLCHAIN_VERSION[1]}" "$RELEASES"
+
+true
+}
+
+
+
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    _main "$@"
+fi
