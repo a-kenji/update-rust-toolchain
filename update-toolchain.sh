@@ -109,8 +109,8 @@ echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION[@]}"
 RELEASES="$(_get_last_no_releases)"
 #_find_version
 
-_find_minor_version "${MINOR_DELTA}" "$RELEASES"
 _find_patch_version "${RUST_TOOLCHAIN_VERSION[1]}" "$RELEASES"
+_find_minor_version "${MINOR_DELTA}" "$RELEASES"
 
 true
 }
