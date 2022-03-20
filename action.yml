@@ -58,7 +58,3 @@ runs:
 
 
           Github Actions will not run workflows on pull requests which are opened by a GitHub Action.
-
-  branding:
-    icon: package
-    color: purple
