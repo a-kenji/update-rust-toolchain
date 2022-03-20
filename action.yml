@@ -54,7 +54,10 @@ runs:
         labels: ${{ inputs.pr-labels }}
         token: ${{ inputs.token }}
         body: |
-          Automatic change by the [update-rust-toolchain]() Github Action.
+          Automatic change by the [update-rust-toolchain](https://github.com/a-kenji/update-rust-toolchain) Github Action.
 
 
           Github Actions will not run workflows on pull requests which are opened by a GitHub Action.
+
+
+
