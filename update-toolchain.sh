@@ -48,7 +48,7 @@ local RELEASES="$2"
 local LATEST=0
 for i in $RELEASES;do
     local SEMVER=()
-    for version in $(_parse_semver "$i");do 
+    for version in $(_parse_semver "$i");do
         SEMVER+=("$version")
     done
     if [ "$LATEST" != "${SEMVER[1]}" ];then
@@ -65,7 +65,7 @@ local MINOR_VERSION="$1"
 local RELEASES="$2"
 for i in $RELEASES;do
     local SEMVER=()
-    for version in $(_parse_semver "$i");do 
+    for version in $(_parse_semver "$i");do
         SEMVER+=("$version")
     done
     if [ "$MINOR_VERSION" == "${SEMVER[1]}" ];then
@@ -89,7 +89,7 @@ echo UPDATE_MINOR "$UPDATE_MINOR"
 
 # Try to read the current toolchain version from the toolchain file
 # If we can read the version directly, then it is still the non toml version
-RUST_TOOLCHAIN_VERSION=$(_parse_semver $(cat $RUST_TOOLCHAIN_FILE))
+RUST_TOOLCHAIN_VERSION=$(_parse_semver $(cat "$RUST_TOOLCHAIN_FILE"))
 # 0 0 0 means we can't parse it, so either it is a toml file, or malformed
 if [[ $RUST_TOOLCHAIN_VERSION == "0 0 0" ]]; then
     TOML=true
@@ -125,7 +125,7 @@ echo "$(_update_channel $VERSION)" > "${RUST_TOOLCHAIN_FILE}"
 else
     echo "$VERSION" > "${RUST_TOOLCHAIN_FILE}"
 fi
-echo $VERSION
+echo "$VERSION"
 echo TOML $TOML
 }
 
