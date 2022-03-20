@@ -124,7 +124,8 @@ if [[ $UPDATE_MINOR == "true" ]]; then
 fi
 
 if [[ $TOML == "true" ]]; then
-    _update_channel "$VERSION" > "${RUST_TOOLCHAIN_FILE}"
+    NEW_CHANNEL=$(_update_channel "$VERSION")
+    echo "$NEW_CHANNEL" > "${RUST_TOOLCHAIN_FILE}"
 else
     echo "$VERSION" > "${RUST_TOOLCHAIN_FILE}"
 fi
