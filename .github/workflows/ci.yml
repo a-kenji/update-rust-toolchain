@@ -1,8 +1,13 @@
 name: CI
 on:
+  workflow_dispatch: # allows manual triggering
   pull_request:
+    paths:
+      - '*.sh'
   push:
     branches: [main]
+    paths:
+      - "*.sh"
 
 jobs:
   shellcheck:
