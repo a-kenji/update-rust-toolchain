@@ -116,7 +116,7 @@ echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION_SEMVER[@]}"
 RELEASES="$(_get_last_no_releases)"
 
 if [[ $UPDATE_PATCH == "true" ]]; then
-    VERSION=$(_find_patch_version "${RUST_TOOLCHAIN_VERSION[1]}" "$RELEASES")
+    VERSION=$(_find_patch_version "${RUST_TOOLCHAIN_VERSION_SEMVER[1]}" "$RELEASES")
 fi
 
 if [[ $UPDATE_MINOR == "true" ]]; then
@@ -130,6 +130,7 @@ else
 fi
 echo "$VERSION"
 echo TOML $TOML
+cat "${RUST_TOOLCHAIN_FILE}"
 }
 
 

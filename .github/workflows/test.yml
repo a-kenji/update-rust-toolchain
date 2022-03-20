@@ -1,9 +1,10 @@
-iname: "update-rust-toolchain test"
+name: "update-rust-toolchain test"
 on:
-  pull_request:
-  push:
-    branches:
-      - master
+  workflow_dispatch: # allows manual triggering
+  #pull_request:
+  #push:
+    #branches:
+      #- master
 
 jobs:
   simple-build:
