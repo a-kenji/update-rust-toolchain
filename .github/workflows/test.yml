@@ -8,10 +8,7 @@ on:
 
 jobs:
   simple-build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: update-rust-toolchain
