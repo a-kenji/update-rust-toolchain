@@ -89,12 +89,12 @@ echo UPDATE_MINOR "$UPDATE_MINOR"
 
 # Try to read the current toolchain version from the toolchain file
 # If we can read the version directly, then it is still the non toml version
-RUST_TOOLCHAIN_VERSION=$(_parse_semver $(cat "$RUST_TOOLCHAIN_FILE"))
+RUST_TOOLCHAIN_VERSION=$(_parse_semver "$(cat "$RUST_TOOLCHAIN_FILE")")
 # 0 0 0 means we can't parse it, so either it is a toml file, or malformed
 if [[ $RUST_TOOLCHAIN_VERSION == "0 0 0" ]]; then
     TOML=true
     RUST_TOOLCHAIN_VERSION="$(_curr_toolchain_version "$RUST_TOOLCHAIN_FILE")"
-    echo RUST_TOOLCHAIN_VERSION ${RUST_TOOLCHAIN_VERSION}
+    echo RUST_TOOLCHAIN_VERSION "${RUST_TOOLCHAIN_VERSION}"
     # if we can't parse it here either, it is malformed
     if [[ $RUST_TOOLCHAIN_VERSION == "false" ]]; then
         echo "Can't parse the toolchain file : ${RUST_TOOLCHAIN_FILE}"
@@ -106,8 +106,11 @@ fi
 
 
 echo CURRENT_RUST_TOOLCHAIN_VERSION "$RUST_TOOLCHAIN_VERSION"
-RUST_TOOLCHAIN_VERSION=($(_parse_semver $(echo "$RUST_TOOLCHAIN_VERSION")))
-echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION[@]}"
+RUST_TOOLCHAIN_VERSION_SEMVER=()
+    for version in $(_parse_semver "$RUST_TOOLCHAIN_VERSION");do
+        RUST_TOOLCHAIN_VERSION_SEMVER+=("$version")
+    done
+echo RUST_TOOLCHAIN_VERSION_SEMVER "${RUST_TOOLCHAIN_VERSION_SEMVER[@]}"
 
 
 RELEASES="$(_get_last_no_releases)"
@@ -121,7 +124,7 @@ if [[ $UPDATE_MINOR == "true" ]]; then
 fi
 
 if [[ $TOML == "true" ]]; then
-echo "$(_update_channel $VERSION)" > "${RUST_TOOLCHAIN_FILE}"
+    _update_channel "$VERSION" > "${RUST_TOOLCHAIN_FILE}"
 else
     echo "$VERSION" > "${RUST_TOOLCHAIN_FILE}"
 fi
