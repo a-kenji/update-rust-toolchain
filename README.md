@@ -54,4 +54,4 @@ components = ["rustfmt", "clippy", "rust-analysis"]
 targets = ["wasm32-wasi"]
 ```
 
-Channels with the `Beta`, or `Nigthly` prefix are not yet supported.
+Channels with the `Beta`, or `Nightly` prefix are not yet supported.
