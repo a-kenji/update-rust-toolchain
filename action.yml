@@ -51,7 +51,7 @@ runs:
         branch: update_rust_toolchain_action
         delete-branch: true
         title: ${{ inputs.pr-title }}
-        labels: ${{ inputs.pr-title }}
+        labels: ${{ inputs.pr-labels }}
         token: ${{ inputs.token }}
         body: |
           Automatic change by the [update-rust-toolchain]() Github Action.
