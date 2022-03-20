@@ -35,3 +35,22 @@ jobs:
         with:
           update-minor: false
 ```
+
+
+## Currently supports:
+
+* Toolchain files in the following format:
+`rust-toolchain`
+```
+1.45.0
+```
+
+`rust-toolchain.toml`
+```
+[toolchain]
+channel = "1.45.0"
+components = ["rustfmt", "clippy", "rust-analysis"]
+targets = ["wasm32-wasi"]
+```
+
+Channels with the `Beta`, or `Nigthly` prefix are not yet supported.

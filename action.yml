@@ -1,5 +1,5 @@
-name: 'Update rust-toolchain file'
-description: 'Updates the rust-toolchain file'
+name: 'Update rust-toolchain.toml'
+description: 'Update your rust-toolchain.toml file and send a PR for it.'
 author: 'Alex Kenji Berthold'
 inputs:
   minor-version-delta:
