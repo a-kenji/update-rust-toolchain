@@ -29,25 +29,28 @@ function _parse_semver() {
     local patch=0
 
     if grep -E '^[0-9]+\.[0-9]+\.[0-9]+' <<<"$token" >/dev/null 2>&1 ; then
-        local n=${token//[!0-9]/ }
-        local a=(${n//\./ })
-        major=${a[0]}
-        minor=${a[1]}
-        patch=${a[2]}
+        local versions=${token//[!0-9]/ }
+        local semver=()
+        for version in $versions; do
+            semver+=("$version")
+        done
+
+        major=${semver[0]}
+        minor=${semver[1]}
+        patch=${semver[2]}
     fi
 
     echo "$major $minor $patch"
-}
-function _get_string_arrary() {
-    IFS=' ' read  -r -a array <<< "$1";
-    echo "${array["${2}"]}"
 }
 function _find_minor_version() {
 local MINOR_DELTA="$1"
 local RELEASES="$2"
 local LATEST=0
 for i in $RELEASES;do
-    SEMVER=($(_parse_semver "$i"))
+    local SEMVER=()
+    for version in $(_parse_semver "$i");do 
+        SEMVER+=("$version")
+    done
     if [ "$LATEST" != "${SEMVER[1]}" ];then
         MINOR_DELTA=$((MINOR_DELTA - 1))
     fi
@@ -61,7 +64,10 @@ function _find_patch_version() {
 local MINOR_VERSION="$1"
 local RELEASES="$2"
 for i in $RELEASES;do
-    SEMVER=($(_parse_semver "$i"))
+    local SEMVER=()
+    for version in $(_parse_semver "$i");do 
+        SEMVER+=("$version")
+    done
     if [ "$MINOR_VERSION" == "${SEMVER[1]}" ];then
         echo "$i"
     fi
