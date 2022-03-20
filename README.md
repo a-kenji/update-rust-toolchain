@@ -8,6 +8,7 @@ while also keeping it up to date.
 Update patch versions as soon as they release,
 or even update your minor versions.
 
+Will usually take between 3-6 seconds to execute.
 
 # Usage:
 
