@@ -19,8 +19,13 @@ local RUST_TOOLCHAIN_VERSION="$1"
 sed -e "/channel/s/\".*\"/\"${RUST_TOOLCHAIN_VERSION}\"/" "${RUST_TOOLCHAIN_FILE}"
 }
 function _get_last_no_releases() {
-    curl --silent "https://api.github.com/repos/rust-lang/rust/releases" | \
-        jq '.[range(50)].tag_name' | sed -e 's/\"//g'
+    RELEASES=$(curl --silent "https://api.github.com/repos/rust-lang/rust/releases")
+    retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Curl couldn't get the releases"
+    exit 1
+fi
+echo "${RELEASES}" | jq '.[range(50)].tag_name' | sed -e 's/\"//g'
 }
 function _parse_semver() {
     local token="$1"
