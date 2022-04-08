@@ -16,7 +16,6 @@ echo "${RUST_TOOLCHAIN_VERSION:-false}"
 # update with new version number
 function _update_channel(){
 local RUST_TOOLCHAIN_VERSION="$1"
-local RUST_TOOLCHAIN_FILE="$2"
 sed -e "/channel/s/\".*\"/\"${RUST_TOOLCHAIN_VERSION}\"/" "${RUST_TOOLCHAIN_FILE}"
 }
 function _get_last_no_releases() {
