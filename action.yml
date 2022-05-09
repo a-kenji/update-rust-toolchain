@@ -46,7 +46,7 @@ runs:
         INPUTS_UPDATE_MINOR: ${{ inputs.update-minor }}
         MINOR_VERSION_DELTA: ${{ inputs.minor-version-delta }}
     - name: Create PR
-      uses: peter-evans/create-pull-request@v4.0.2
+      uses: peter-evans/create-pull-request@v4.0.3
       with:
         branch: update_rust_toolchain_action
         delete-branch: true
