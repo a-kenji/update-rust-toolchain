@@ -42,6 +42,13 @@ GitHub Actions will not run workflows by a PR that is itself opened by a GitHub 
 
 ## Manually
 You can manually run the following commands, in order to force a CI run of the PR.
+```
+git branch -D update_rust_toolchain_action
+git fetch origin
+git checkout update_rust_toolchain_action
+git commit --amend --no-edit
+git push origin update_rust_toolchain_action --force
+```
 
 ## With a Personal Authentication Token
 
