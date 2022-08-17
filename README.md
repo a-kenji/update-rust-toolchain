@@ -77,7 +77,7 @@ jobs:
 It is additionally recommended to scope the environment variable in an environment, if possible.
 
 
-### Currently supports:
+# Currently supports:
 
 * Toolchain files in the following format:
 
