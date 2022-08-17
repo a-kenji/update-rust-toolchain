@@ -24,5 +24,6 @@
         nativeBuildInputs = shellInputs ++ fmtInputs;
         buildInputs = shellInputs ++ fmtInputs;
       };
+      formatter = pkgs.alejandra;
     });
 }
