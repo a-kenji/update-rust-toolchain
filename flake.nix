@@ -10,8 +10,9 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
-      buildInputs = [
+      shellInputs = [
         pkgs.shellcheck
+        pkgs.actionlint
       ];
       fmtInputs = [
         pkgs.alejandra
@@ -20,8 +21,8 @@
     in rec {
       devShell = pkgs.mkShell {
         name = "update-rust-action-env";
-        nativeBuildInputs = buildInputs ++ fmtInputs;
-        buildInputs = buildInputs ++ fmtInputs;
+        nativeBuildInputs = shellInputs ++ fmtInputs;
+        buildInputs = shellInputs ++ fmtInputs;
       };
     });
 }

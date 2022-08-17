@@ -20,3 +20,5 @@ jobs:
         uses: cachix/install-nix-action@v17
       - name: Shellcheck
         run: nix develop --command shellcheck $(find . -type f -name "*.sh" -executable)
+      - name: "actionlint"
+        run: nix develop --command actionlint --ignore 'SC2046'
