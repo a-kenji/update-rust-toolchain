@@ -78,6 +78,12 @@ for i in $RELEASES;do
     fi
 done
 }
+function _get_first_version() {
+	# Word splitting is desired here, to split the individual patch and minor version up
+	# shellcheck disable=2206
+	local VERSIONS=($1)
+	echo "${VERSIONS[0]}"
+}
 
 _main() {
 # Path to the rust-toolchain file
@@ -122,10 +128,12 @@ RELEASES="$(_get_last_no_releases)"
 
 if [[ $UPDATE_PATCH == "true" ]]; then
     VERSION=$(_find_patch_version "${RUST_TOOLCHAIN_VERSION_SEMVER[1]}" "$RELEASES")
+    VERSION=$(_get_first_version "$VERSION")
 fi
 
 if [[ $UPDATE_MINOR == "true" ]]; then
     VERSION=$(_find_minor_version "${MINOR_DELTA}" "$RELEASES")
+    VERSION=$(_get_first_version "$VERSION")
 fi
 
 if [[ $TOML == "true" ]]; then
