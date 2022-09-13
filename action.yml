@@ -26,6 +26,10 @@ inputs:
     description: 'The message provided with the commit'
     required: false
     default: "rust-toolchain: Update"
+  pr-branch:
+    description: 'The branch on which the PR is created'
+    required: false
+    default: "update_rust_toolchain_action"
   pr-title:
     description: 'The title of the PR to be created'
     required: false
@@ -50,7 +54,7 @@ runs:
     - name: Create PR
       uses: peter-evans/create-pull-request@v4.1.1
       with:
-        branch: update_rust_toolchain_action
+        branch: ${{ inputs.pr-branch }}
         delete-branch: true
         title: ${{ inputs.pr-title }}
         labels: ${{ inputs.pr-labels }}
