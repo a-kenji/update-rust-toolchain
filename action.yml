@@ -69,7 +69,7 @@ runs:
 
           Github Actions will not run workflows on pull requests which are opened by a GitHub Action.
 
-          For examples on how to run an workflows on this pr, please go to the [readme](https://github.com/a-kenji/update-rust-toolchain/blob/main/README.md#running-github-actions-on-the-action).
+          For examples on how to run workflows on this pr, please go to the [readme](https://github.com/a-kenji/update-rust-toolchain/blob/main/README.md#running-github-actions-on-the-action).
 
 
 
