@@ -22,6 +22,10 @@ inputs:
     description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
     required: false
     default: ${{ github.token }}
+  base:
+    description: 'The GitHub base'
+    required: false
+    default: ${{ github.head_ref }}
   commit-msg:
     description: 'The message provided with the commit'
     required: false
@@ -54,6 +58,7 @@ runs:
         delete-branch: true
         title: ${{ inputs.pr-title }}
         labels: ${{ inputs.pr-labels }}
+        base: ${{ github.head_ref }}
         token: ${{ inputs.token }}
         body: |
           Automatic change by the [update-rust-toolchain](https://github.com/a-kenji/update-rust-toolchain) Github Action.
