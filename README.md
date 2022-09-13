@@ -38,7 +38,7 @@ jobs:
 ```
 
 # Running GitHub Actions on the Action
-GitHub Actions will not run workflows by a PR that is itself opened by a GitHub Action. There are two ways to have GitHub Actions CI run on a PR submitted by this action.
+GitHub Actions will not run workflows by a PR that is itself opened by a GitHub Action. There are three ways to have GitHub Actions CI run on a PR submitted by this action.
 
 ## Manually
 You can manually run the following commands, in order to force a CI run of the PR.
@@ -75,6 +75,11 @@ jobs:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
 ```
 It is additionally recommended to scope the environment variable in an environment, if possible.
+
+## With a label trigger
+An action can be set up to be triggered on adding a label, such as `pr-run-tests`.
+Please note that this follows the same rules as a pr itself, so if an action sets 
+the label, the workflow will not be run.
 
 
 # Currently supports:
