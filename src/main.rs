@@ -163,7 +163,7 @@ fn main() -> Result<(), RustToolchainError> {
         Channel::Nightly => {
             let resp = reqwest::blocking::get(RUST_NIGHTLY_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
-            std::fs::create_dir_all("{location}/nightly")?;
+            std::fs::create_dir_all(format!("{location}/nightly"))?;
             let version = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).version;
             let mut file = File::create(format!("{location}/nightly/{version}.json"))?;
             let outputs = serde_json::to_string::<PreReleaseOutputs>(&serialized.clone().into())?;
@@ -176,7 +176,7 @@ fn main() -> Result<(), RustToolchainError> {
         Channel::Beta => {
             let resp = reqwest::blocking::get(RUST_BETA_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
-            std::fs::create_dir_all("{location}/beta")?;
+            std::fs::create_dir_all(format!("{location}/beta"))?;
             let version = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).version;
 
             let mut file = File::create(format!("{location}/beta/{version}.json"))?;
