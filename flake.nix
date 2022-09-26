@@ -87,7 +87,7 @@
           inherit nativeBuildInputs buildInputs;
         };
 
-      ci = {
+      ci.${system} = {
         update-nightly = update-channel "nightly";
         update-beta = update-channel "beta";
       };
