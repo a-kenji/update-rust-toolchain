@@ -48,7 +48,6 @@
       update-channel = channel:
         pkgs.writeScriptBin "update-${channel}" ''
           set -x
-           git config --local user.email "''${{ github.actor }}@users.noreply.github.com"
            git config --local user.name "github-actions[bot]"
            # create temporary directory for downloads
            export TMP_DIR=./tmplocal

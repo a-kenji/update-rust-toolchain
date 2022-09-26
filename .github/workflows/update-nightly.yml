@@ -37,6 +37,9 @@ jobs:
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
+    - name: setup git
+      run: git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+      shell: bash
     - name: run updater app
       run: nix run -L github:"$GITHUB_REPOSITORY"#ci.update-nightly --no-write-lock-file
       shell: bash
