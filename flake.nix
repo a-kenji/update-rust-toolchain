@@ -7,17 +7,15 @@
     inputs.flake-utils.follows = "flake-utils";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    , rust-overlay
-    ,
-    }:
-    flake-utils.lib.eachDefaultSystem (system:
-    let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    rust-overlay,
+  }:
+    flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
-      overlays = [ (import rust-overlay) ];
+      overlays = [(import rust-overlay)];
       rustPkgs = import nixpkgs {
         inherit system overlays;
       };
@@ -46,8 +44,25 @@
         pkgs.alejandra
         pkgs.treefmt
       ];
-    in
-    {
+      update-channel = channel:
+        pkgs.writeScriptBin "update-${channel}" ''
+          set -x
+           git config --local user.email "''${{ github.actor }}@users.noreply.github.com"
+           git config --local user.name "github-actions[bot]"
+           # create temporary directory for downloads
+           export TMP_DIR=./tmplocal
+           mkdir $TMP_DIR
+           # export WORKERS=5
+           nix run -L github:$GITHUB_REPOSITORY \
+             --no-write-lock-file \
+             -- \
+             --output ./outputs \
+             ${channel}
+           git add .
+           git commit -m "$(date)"
+           git push
+        '';
+    in {
       devShells.default = pkgs.mkShell {
         name = "update-rust-action-env";
         buildInputs = shellInputs ++ fmtInputs ++ devInputs ++ buildInputs ++ nativeBuildInputs;
@@ -57,7 +72,8 @@
           pkgs.makeRustPlatform {
             inherit cargo rustc;
           }
-        ).buildRustPackage {
+        )
+        .buildRustPackage {
           cargoDepsName = "update-rust-toolchain";
           name = "update-rust-toolchain";
           version = "0.1.0";
@@ -70,6 +86,11 @@
           };
           inherit nativeBuildInputs buildInputs;
         };
+
+      ci = {
+        update-nightly = update-channel "nightly";
+        update-beta = update-channel "beta";
+      };
 
       formatter = pkgs.alejandra;
     });

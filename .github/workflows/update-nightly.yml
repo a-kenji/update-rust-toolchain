@@ -38,23 +38,5 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
     - name: run updater app
-      run: |
-        set -x
-        git config --local user.email "${{ github.actor }}@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-
-        # create temporary directory for downloads
-        export TMP_DIR=./tmplocal
-        mkdir $TMP_DIR
-        # export WORKERS=5
-
-        nix run -L github:$GITHUB_REPOSITORY \
-          --no-write-lock-file \
-          -- \
-          --output ./outputs \
-          nightly
-
-        git add .
-        git commit -m "$(date)"
-        git push
+      run: nix run -L github:"$GITHUB_REPOSITORY"#ci.update-nightly --no-write-lock-file
       shell: bash
