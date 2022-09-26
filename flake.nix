@@ -13,7 +13,8 @@
     flake-utils,
     rust-overlay,
   }:
-    flake-utils.lib.eachDefaultSystem (system: let
+    flake-utils.lib.eachDefaultSystem
+    (system: let
       pkgs = nixpkgs.legacyPackages.${system};
       overlays = [(import rust-overlay)];
       rustPkgs = import nixpkgs {
@@ -67,29 +68,30 @@
         name = "update-rust-action-env";
         buildInputs = shellInputs ++ fmtInputs ++ devInputs ++ buildInputs ++ nativeBuildInputs;
       };
-      packages.default =
-        (
-          pkgs.makeRustPlatform {
-            inherit cargo rustc;
-          }
-        )
-        .buildRustPackage {
-          cargoDepsName = "update-rust-toolchain";
-          name = "update-rust-toolchain";
-          version = "0.1.0";
-          src = ./.;
-          cargoLock = {
-            lockFile = builtins.path {
-              path = ./. + "/Cargo.lock";
-              name = "Cargo.lock";
+      packages = {
+        default =
+          (
+            pkgs.makeRustPlatform {
+              inherit cargo rustc;
+            }
+          )
+          .buildRustPackage {
+            cargoDepsName = "update-rust-toolchain";
+            name = "update-rust-toolchain";
+            version = "0.1.0";
+            src = ./.;
+            cargoLock = {
+              lockFile = builtins.path {
+                path = ./. + "/Cargo.lock";
+                name = "Cargo.lock";
+              };
             };
+            inherit nativeBuildInputs buildInputs;
           };
-          inherit nativeBuildInputs buildInputs;
+        ci = {
+          update-nightly = update-channel "nightly";
+          update-beta = update-channel "beta";
         };
-
-      ci.${system} = {
-        update-nightly = update-channel "nightly";
-        update-beta = update-channel "beta";
       };
 
       formatter = pkgs.alejandra;
