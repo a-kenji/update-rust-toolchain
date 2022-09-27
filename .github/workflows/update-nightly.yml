@@ -2,8 +2,10 @@ name: "nightly release update"
 
 on:
   schedule:
-    # run everyday at 03:00
-    - cron:  "0 3 * * *"
+    # run everyday at 02:30
+    - cron:  "30 2 * * *"
+    # run everyday at 13:00
+    - cron:  "0 13 * * *"
   workflow_dispatch:
 
 jobs:
