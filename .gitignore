@@ -5,3 +5,7 @@
 # Added by cargo
 
 /target
+
+# nix support
+/result
+/result-*
