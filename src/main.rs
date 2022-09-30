@@ -2,7 +2,7 @@ use clap::Parser;
 use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 
 use thiserror::Error;
@@ -66,10 +66,21 @@ struct PreReleaseOutputs {
     components: HashMap<String, Vec<usize>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
 struct TargetMap {
     #[serde(flatten)]
     components: HashMap<String, Vec<String>>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct MetaData {
+    latest_version: semver::Version,
+}
+
+impl MetaData {
+    fn new(latest_version: semver::Version) -> Self {
+        Self { latest_version }
+    }
 }
 
 #[derive(Debug)]
@@ -169,9 +180,9 @@ fn main() -> Result<(), RustToolchainError> {
             let outputs = serde_json::to_string::<PreReleaseOutputs>(&serialized.clone().into())?;
             file.write_all(outputs.as_bytes())?;
 
-            let mut file = File::create(format!("outputs/nightly/since-{version}-map.json"))?;
+            let mut map = File::create(format!("outputs/nightly/since-{version}-map.json"))?;
             let outputs = serde_json::to_string::<TargetMap>(&serialized.into())?;
-            file.write_all(outputs.as_bytes())?;
+            map.write_all(outputs.as_bytes())?;
         }
         Channel::Beta => {
             let resp = reqwest::blocking::get(RUST_BETA_PRE_RELEASE)?.text()?;
@@ -183,13 +194,30 @@ fn main() -> Result<(), RustToolchainError> {
             let outputs = serde_json::to_string::<PreReleaseOutputs>(&serialized.clone().into())?;
             file.write_all(outputs.as_bytes())?;
 
-            let mut file = File::create(format!("{location}/beta/since-{version}-map.json"))?;
+            let mut map = File::create(format!("{location}/beta/since-{version}-map.json"))?;
             let outputs = serde_json::to_string::<TargetMap>(&serialized.into())?;
-            file.write_all(outputs.as_bytes())?;
+            map.write_all(outputs.as_bytes())?;
         }
         Channel::Stable => {}
     }
     Ok(())
+}
+
+pub(crate) fn write_meta_data(
+    path: &str,
+    version: semver::Version,
+) -> Result<(), RustToolchainError> {
+    let mut map = File::create(path)?;
+    let outputs = serde_json::to_string::<MetaData>(&MetaData::new(version))?;
+    map.write_all(outputs.as_bytes())?;
+    Ok(())
+}
+
+pub(crate) fn read_meta_data(path: &str) -> Result<MetaData, RustToolchainError> {
+    let mut file = File::open(path)?;
+    let mut data = String::new();
+    file.read_to_string(&mut data)?;
+    serde_json::from_str::<MetaData>(&data).map_err(|e| e.into())
 }
 
 #[cfg(test)]

@@ -94,5 +94,14 @@
       };
 
       formatter = pkgs.alejandra;
+
+      checks = {
+        packages = {
+          inherit (self.outputs.packages.${system}) default;
+        };
+        devShells = {
+          inherit (self.outputs.devShells.${system}) default;
+        };
+      };
     });
 }
