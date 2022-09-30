@@ -175,12 +175,12 @@ fn main() -> Result<(), RustToolchainError> {
             let resp = reqwest::blocking::get(RUST_NIGHTLY_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
             std::fs::create_dir_all(format!("{location}/nightly"))?;
-            let version = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).version;
-            let mut file = File::create(format!("{location}/nightly/{version}.json"))?;
+            let identifier = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).date;
+            let mut file = File::create(format!("{location}/nightly/{identifier}.json"))?;
             let outputs = serde_json::to_string::<PreReleaseOutputs>(&serialized.clone().into())?;
             file.write_all(outputs.as_bytes())?;
 
-            let mut map = File::create(format!("outputs/nightly/since-{version}-map.json"))?;
+            let mut map = File::create(format!("outputs/nightly/since-{identifier}-map.json"))?;
             let outputs = serde_json::to_string::<TargetMap>(&serialized.into())?;
             map.write_all(outputs.as_bytes())?;
         }
@@ -188,13 +188,13 @@ fn main() -> Result<(), RustToolchainError> {
             let resp = reqwest::blocking::get(RUST_BETA_PRE_RELEASE)?.text()?;
             let serialized: PreRelease = toml::from_str(&resp)?;
             std::fs::create_dir_all(format!("{location}/beta"))?;
-            let version = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).version;
+            let identifier = <PreRelease as Into<PreReleaseOutputs>>::into(serialized.clone()).date;
 
-            let mut file = File::create(format!("{location}/beta/{version}.json"))?;
+            let mut file = File::create(format!("{location}/beta/{identifier}.json"))?;
             let outputs = serde_json::to_string::<PreReleaseOutputs>(&serialized.clone().into())?;
             file.write_all(outputs.as_bytes())?;
 
-            let mut map = File::create(format!("{location}/beta/since-{version}-map.json"))?;
+            let mut map = File::create(format!("{location}/beta/since-{identifier}-map.json"))?;
             let outputs = serde_json::to_string::<TargetMap>(&serialized.into())?;
             map.write_all(outputs.as_bytes())?;
         }
