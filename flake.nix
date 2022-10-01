@@ -36,7 +36,7 @@
       devInputs = [
         rustc
         cargo
-        pkgs.python310
+        pkgs.python311
       ];
       shellInputs = [
         pkgs.shellcheck
