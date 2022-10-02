@@ -54,7 +54,7 @@ struct Target {
     xz_url: Option<String>,
     xz_hash: Option<String>,
 }
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 struct Rename {
     to: String,
 }
@@ -70,6 +70,7 @@ struct PreReleaseOutputs {
 struct TargetMap {
     #[serde(flatten)]
     components: HashMap<String, Vec<String>>,
+    renames: Option<HashMap<String, Rename>>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -154,7 +155,7 @@ impl From<PreRelease> for TargetMap {
             keys.sort();
             components.insert(k, keys);
         }
-        Self { components }
+        Self { components, renames: input.renames, }
     }
 }
 const RUST_RELEASES: &str = "https://api.github.com/repos/rust-lang/rust/tags";
