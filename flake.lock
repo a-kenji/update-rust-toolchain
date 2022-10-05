@@ -70,11 +70,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1664979786,
-        "narHash": "sha256-Q/Aa5uJPgQvkEJszfl0oFXqHBbsLcpFa8iKD0um7wo0=",
+        "lastModified": 1664981202,
+        "narHash": "sha256-yBrOw/bTv4xVeJ1r93E1q/kBNZ2o61ATRdo3hVqcwVk=",
         "owner": "a-kenji",
         "repo": "rust-toolchain-manifest",
-        "rev": "4f93a76f5bf5ca5edb9a10aa306501147bd31d87",
+        "rev": "157946fcf1498a44e412ba29e9973e67583e981f",
         "type": "github"
       },
       "original": {
