@@ -16,8 +16,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "narHash": "sha256-ulGq3W5XsrBMU/u5k9d4oPy65pQTkunR4HKKtTq0RwY=",
-        "path": "/nix/store/f71alr07xb2swc37fiqjr5h416qcs6wr-source",
+        "lastModified": 1664780719,
+        "narHash": "sha256-Oxe6la5dSqRfJogjtY4sRzJjDDqvroJIVkcGEOT87MA=",
+        "path": "/nix/store/c43fflg7i5ad16d9py6nrh7qzgynn0av-source",
+        "rev": "fd54651f5ffb4a36e8463e0c327a78442b26cbe7",
         "type": "path"
       },
       "original": {
@@ -68,11 +70,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1664969692,
-        "narHash": "sha256-xP1onRdD68wmKlXV/LoGrcf3gUpVbdnLy16jTtPDNR0=",
+        "lastModified": 1664979786,
+        "narHash": "sha256-Q/Aa5uJPgQvkEJszfl0oFXqHBbsLcpFa8iKD0um7wo0=",
         "owner": "a-kenji",
         "repo": "rust-toolchain-manifest",
-        "rev": "fd885684b6a2fbe8e73b5dffb77bd73140c03dd3",
+        "rev": "4f93a76f5bf5ca5edb9a10aa306501147bd31d87",
         "type": "github"
       },
       "original": {
