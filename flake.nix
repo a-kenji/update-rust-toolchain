@@ -61,11 +61,5 @@
       };
 
       formatter = pkgs.alejandra;
-
-      checks = {
-        devShells = {
-          inherit (self.outputs.devShells.${system}) default;
-        };
-      };
     });
 }
