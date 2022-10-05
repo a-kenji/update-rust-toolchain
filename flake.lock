@@ -29,15 +29,17 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
-        "rust-overlay": "rust-overlay"
+        "toolchain-manifest": "toolchain-manifest"
       }
     },
     "rust-overlay": {
       "inputs": {
         "flake-utils": [
+          "toolchain-manifest",
           "flake-utils"
         ],
         "nixpkgs": [
+          "toolchain-manifest",
           "nixpkgs"
         ]
       },
@@ -52,6 +54,30 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "toolchain-manifest": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1664969692,
+        "narHash": "sha256-xP1onRdD68wmKlXV/LoGrcf3gUpVbdnLy16jTtPDNR0=",
+        "owner": "a-kenji",
+        "repo": "rust-toolchain-manifest",
+        "rev": "fd885684b6a2fbe8e73b5dffb77bd73140c03dd3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "a-kenji",
+        "repo": "rust-toolchain-manifest",
         "type": "github"
       }
     }
