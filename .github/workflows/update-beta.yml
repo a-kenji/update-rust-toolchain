@@ -43,5 +43,5 @@ jobs:
       run: git config --local user.email "${{ github.actor }}@users.noreply.github.com"
       shell: bash
     - name: run updater app
-      run: nix run -L github:"$GITHUB_REPOSITORY"#ci.update-beta --no-write-lock-file
+      run: nix run -L github:"$GITHUB_REPOSITORY"#ci.x86_64-linux.update-beta --no-write-lock-file
       shell: bash
