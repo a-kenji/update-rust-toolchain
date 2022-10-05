@@ -38,7 +38,7 @@ jobs:
 ```
 
 # Running GitHub Actions on the Action
-GitHub Actions will not run workflows by a PR that is itself opened by a GitHub Action. There are three ways to have GitHub Actions CI run on a PR submitted by this action.
+GitHub Actions will not trigger workflows by a PR that is itself opened by a GitHub Action: [Triggering a workflow from a workflow](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow). There are three ways to have GitHub Actions CI run on a PR submitted by this action.
 
 ## Manually
 You can manually run the following commands, in order to force a CI run of the PR.
@@ -52,7 +52,7 @@ git push origin update_rust_toolchain_action --force
 
 ## With a Personal Authentication Token
 
-By providing a Personal Authentication Token, the PR will be submitted in a way that bypasses this limitation (GitHub will essentially think it is the owner of the PAT submitting the PR, and not an Action).
+By providing a Personal Authentication Token([Using the `GITHUB_TOKEN` in a Worflow](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow)), the PR will be submitted in a way that bypasses this limitation (GitHub will essentially think it is the owner of the PAT submitting the PR, and not an Action).
 You can create a token by visiting https://github.com/settings/tokens and select at least the `repo` scope. Then, store this token in your repository secrets (i.e. `https://github.com/<USER>/<REPO>/settings/secrets/actions`) as `GH_TOKEN_FOR_UPDATES` and set up your workflow file like the following:
 
 ```
