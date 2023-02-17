@@ -1,4 +1,4 @@
-name: "beta release update"
+name: "stable release update"
 
 on:
   schedule:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   run:
-    name: beta release update
+    name: stable release update
     runs-on: ubuntu-latest
     timeout-minutes: 400
     environment: cachix
