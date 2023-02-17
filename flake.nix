@@ -56,8 +56,9 @@
       };
       packages.default = toolchain-manifest.outputs.packages.${system}.default;
       ci = {
-        update-nightly = update-channel "nightly";
+        update-stable = update-channel "stable";
         update-beta = update-channel "beta";
+        update-nightly = update-channel "nightly";
       };
 
       formatter = pkgs.alejandra;

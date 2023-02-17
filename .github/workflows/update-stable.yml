@@ -1,0 +1,47 @@
+name: "beta release update"
+
+on:
+  schedule:
+    # run everyday at 03:00
+    - cron:  "0 3 * * *"
+    # run everyday at 13:30
+    - cron:  "30 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    name: beta release update
+    runs-on: ubuntu-latest
+    timeout-minutes: 400
+    environment: cachix
+    steps:
+
+    - uses: actions/checkout@v3
+      with:
+        ref: data
+        fetch-depth: 1
+
+    - name: Install/Setup - NIX
+      uses: cachix/install-nix-action@v18
+      with:
+        # install_url: https://releases.nixos.org/nix/nix-2.10.3/install
+        # If you chose API tokens for write access OR if you have a private cache
+        nix_path: nixpkgs=channel:nixos-unstable
+        # install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
+        # GC 30GB when free space < 3GB
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          min-free = 3000000000
+          max-free = 30000000000
+    - uses: cachix/cachix-action@v12
+      with:
+        name: kenji
+        # If you chose API tokens for write access OR if you have a private cache
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+    - name: setup git
+      run: git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+      shell: bash
+    - name: run updater app
+      run: nix run -L github:"$GITHUB_REPOSITORY"#ci.x86_64-linux.update-stable --no-write-lock-file
+      shell: bash
