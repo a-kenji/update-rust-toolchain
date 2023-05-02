@@ -40,7 +40,9 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
     - name: setup git
-      run: git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+      run: |
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       shell: bash
     - name: run updater app
       run: nix run -L github:"$GITHUB_REPOSITORY"#ci.x86_64-linux.update-beta --no-write-lock-file
