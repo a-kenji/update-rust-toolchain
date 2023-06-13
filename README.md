@@ -1,4 +1,6 @@
 # update-rust-toolchain
+[![Matrix Chat Room](https://img.shields.io/badge/chat-on%20matrix-1d7e64?logo=matrix&style=flat-square)](https://matrix.to/#/#update-rust-toolchain:matrix.org)
+
 
 This is a GitHub Action that will update your `rust-toolchain` / `rust-toolchain.toml` file, when it is run.
 
