@@ -28,22 +28,25 @@
         pkgs.treefmt
       ];
       update-channel = channel:
-        pkgs.writeScriptBin "update-${channel}" ''
-          set -x
-           git config --local user.name "github-actions[bot]"
-           nix run -L github:$GITHUB_REPOSITORY \
-             --no-write-lock-file \
-             -- \
-             --version
-           nix run -L github:$GITHUB_REPOSITORY \
-             --no-write-lock-file \
-             -- \
-             --output ./. \
-             ${channel}
-           git add .
-           git commit -m "$(date)"
-           git push
-        '';
+        pkgs.writeShellApplication {
+          name = "update-${channel}";
+          text = ''
+            set -x
+             git config --local user.name "github-actions[bot]"
+             nix run -L github:"$GITHUB_REPOSITORY" \
+               --no-write-lock-file \
+               -- \
+               --version
+             nix run -L github:"$GITHUB_REPOSITORY" \
+               --no-write-lock-file \
+               -- \
+               --output ./. \
+               ${channel}
+             git add .
+             git commit -m "$(date)"
+             git push
+          '';
+        };
     in {
       devShells = {
         default = pkgs.mkShell {
