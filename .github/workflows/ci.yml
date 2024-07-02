@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Nix
-        uses: cachix/install-nix-action@v26
+        uses: cachix/install-nix-action@V27
       - name: Shellcheck
         run: nix develop --command shellcheck $(find . -type f -name "*.sh" -executable)
   actionlint:
@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Nix
-        uses: cachix/install-nix-action@v26
+        uses: cachix/install-nix-action@V27
       - name: "actionlint"
         run: nix develop --command actionlint --ignore 'SC2046'
   nix-flake-check:
@@ -34,7 +34,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Nix
-        uses: cachix/install-nix-action@v26
+        uses: cachix/install-nix-action@V27
       - name: "nix flake check"
         run: nix flake check
   treefmt:
@@ -44,6 +44,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Nix
-        uses: cachix/install-nix-action@v26
+        uses: cachix/install-nix-action@V27
       - name: "treefmt"
         run: nix develop .#fmtShell --command treefmt --config-file ./.treefmt.toml --tree-root ./.
